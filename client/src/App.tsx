@@ -1,20 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Room from "./components/Room";
+import { createRoom } from "./api/roomApi";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [user, setUser] = useState("Guest");
+  const [newRoomName, setNewRoomName] = useState("");
+  const [refreshFlag, setRefreshFlag] = useState(0);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/")
-      .then((res) => res.text())
-      .then(setMessage)
-      .catch((err) => console.error("Fetch Error: ", err));
-  }, []);
+  const handleCreateRoom = async () => {
+    if (!newRoomName.trim()) return;
+    try {
+      await createRoom(newRoomName);
+      setNewRoomName("");
+      setRefreshFlag((prev) => prev + 1);
+    } catch (err) {
+      console.error("Failed to create room", err);
+    }
+  };
 
   return (
-    <>
-      <h1>Hello Code-Clash</h1>
-      <p>Backend Says: {message}</p>
-    </>
+    <div>
+      <h1>Code-Clash Rooms</h1>
+      <div>
+        <input
+          type="text"
+          value={user}
+          onChange={(e) => setUser(e.target.value)}
+          placeholder="Your name"
+        />
+      </div>
+
+      <div>
+        <input
+          type="text"
+          value={newRoomName}
+          onChange={(e) => setNewRoomName(e.target.value)}
+          placeholder="New room name"
+        />
+        <button onClick={handleCreateRoom}>Create Room</button>
+      </div>
+
+      <Room
+        user={user}
+        refreshFlag={refreshFlag}
+        onRefresh={() => setRefreshFlag((prev) => prev + 1)}
+      />
+    </div>
   );
 }
 
