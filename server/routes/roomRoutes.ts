@@ -5,6 +5,6 @@ const router = Router();
 
 router.get("/", getRooms);
 router.post("/", createRoom);
-router.get("/:id/join", joinRoom);
+router.put("/:id/join", joinRoom);
 
 export default router;

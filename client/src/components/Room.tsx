@@ -1,11 +1,7 @@
+// import Room from "./components/Room";
+import { createRoom } from "../api/roomApi";
 import { useEffect, useState } from "react";
 import { getRooms, joinRoom } from "../api/roomApi";
-
-interface RoomProps {
-  user: string;
-  refreshFlag: number;
-  onRefresh?: () => void;
-}
 
 export interface RoomType {
   _id: string;
@@ -13,8 +9,25 @@ export interface RoomType {
   participants: string[];
 }
 
-const Room: React.FC<RoomProps> = ({ user, refreshFlag, onRefresh }) => {
+function Room() {
+  const [user, setUser] = useState("Guest");
+  const [newRoomName, setNewRoomName] = useState("");
+  const [refreshFlag, setRefreshFlag] = useState(0);
   const [rooms, setRooms] = useState<RoomType[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [showJoinForm, setJoinForm] = useState(false);
+
+  const handleCreateRoom = async () => {
+    if (!newRoomName.trim()) return;
+    try {
+      await createRoom(newRoomName);
+      setNewRoomName("");
+      setRefreshFlag((prev) => prev + 1);
+    } catch (err) {
+      console.error("Failed to create room", err);
+    }
+    setShowForm(false);
+  };
 
   const fetchRooms = async () => {
     try {
@@ -38,30 +51,68 @@ const Room: React.FC<RoomProps> = ({ user, refreshFlag, onRefresh }) => {
     try {
       await joinRoom(roomId, user);
       fetchRooms();
-      if (onRefresh) onRefresh();
     } catch (err) {
       console.error("Failed to join room", err);
     }
   };
 
   return (
-    <div>
-      <h2>Available Rooms</h2>
-      <ul>
-        {rooms.map((room) => (
-          <li key={room._id}>
-            {room.name} ({room.participants.length} participants)
-            <button
-              onClick={() => handleJoin(room._id)}
-              disabled={room.participants.includes(user)}
-            >
-              {room.participants.includes(user) ? "Joined" : "Join"}
+    <>
+      <div>
+        {!showForm ? (
+          <button onClick={() => setShowForm(true)}>Create Room</button>
+        ) : (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault(); // stop page reload
+              handleCreateRoom();
+            }}
+          >
+            <label htmlFor="roomName">Room Name:</label>
+            <input
+              id="roomName"
+              name="roomName"
+              type="text"
+              value={newRoomName} // use newRoomName
+              onChange={(e) => setNewRoomName(e.target.value)} // update newRoomName
+              placeholder="Enter Room Name"
+              autoComplete="off"
+            />
+            <button type="submit">Create</button>
+            <button type="button" onClick={() => setShowForm(false)}>
+              Cancel
             </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+          </form>
+        )}
+      </div>
+      <div>
+        {!showJoinForm ? (
+          <button onClick={() => setJoinForm(true)}>Join Room</button>
+        ) : (
+          <div>
+            <h2>Available Rooms</h2>
+            <ul>
+              {rooms.map((room) => (
+                <li key={room._id}>
+                  {room.name} ({room.participants.length} participants)
+                  <button
+                    onClick={() => handleJoin(room._id)}
+                    disabled={room.participants.includes(user)}
+                  >
+                    {room.participants.includes(user) ? "Joined" : "Join"}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <button type="button" onClick={() => setJoinForm(false)}>
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
-};
+}
 
 export default Room;

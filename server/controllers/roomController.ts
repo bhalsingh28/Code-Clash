@@ -30,11 +30,17 @@ export const joinRoom = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { user } = req.body;
-    const room = await Room.findByIdAndUpdate(
-      id,
-      { $push: { participants: user } },
-      { new: true }
-    );
+    const room = await Room.findById(id);
+    if (!room) {
+      return res.status(404).json({ error: "Room not found" });
+    }
+    // Check for already joined
+    if (room.participants.includes(user)) {
+      return res.status(400).json({ error: "User already joined" });
+    }
+    // Add user
+    room.participants.push(user);
+    await room.save();
     res.json(room);
   } catch (err) {
     res.status(500).json({ error: "Failed to create room" });
