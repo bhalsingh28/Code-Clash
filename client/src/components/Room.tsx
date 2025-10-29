@@ -1,7 +1,7 @@
-// import Room from "./components/Room";
 import { createRoom } from "../api/roomApi";
 import { useEffect, useState } from "react";
 import { getRooms, joinRoom } from "../api/roomApi";
+import { useNavigate } from "react-router-dom";
 
 export interface RoomType {
   _id: string;
@@ -78,6 +78,22 @@ function Room() {
               placeholder="Enter Room Name"
               autoComplete="off"
             />
+
+            <label htmlFor="problemType">Problem Type : </label>
+            <select name="difficulty" id="difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+            <label htmlFor="timer">Timer : </label>
+            <select name="timer" id="timer">
+              <option value="10">10 Minutes</option>
+              <option value="15">15 Minutes</option>
+              <option value="20">20 Minutes</option>
+              <option value="25">25 Minutes</option>
+              <option value="30">30 Minutes</option>
+            </select>
+
             <button type="submit">Create</button>
             <button type="button" onClick={() => setShowForm(false)}>
               Cancel
@@ -105,9 +121,16 @@ function Room() {
               ))}
             </ul>
 
-            <button type="button" onClick={() => setJoinForm(false)}>
-              Cancel
-            </button>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // stop page reload
+                handleCreateRoom();
+              }}
+            >
+              <button type="button" onClick={() => setJoinForm(false)}>
+                Cancel
+              </button>
+            </form>
           </div>
         )}
       </div>

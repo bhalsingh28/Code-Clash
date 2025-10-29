@@ -1,15 +1,16 @@
-import Room from "./components/Room";
-import Profile from "./components/Profile";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+import RoomPage from "./components/RoomPage";
 import "./styles.css";
 
 function App() {
   return (
-    <>
-      <div className="hero">
-        <Profile />
-        <Room />
-      </div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/room/:roomId" element={<RoomPage />} />
+      </Routes>
+    </Router>
   );
 }
 
