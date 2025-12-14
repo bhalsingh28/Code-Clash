@@ -60,7 +60,14 @@ function Room() {
     <>
       <div>
         {!showForm ? (
-          <button onClick={() => setShowForm(true)}>Create Room</button>
+          <button
+            onClick={() => {
+              setShowForm(true);
+              setJoinForm(false);
+            }}
+          >
+            Create Room
+          </button>
         ) : (
           <form
             onSubmit={(e) => {
@@ -103,7 +110,14 @@ function Room() {
       </div>
       <div>
         {!showJoinForm ? (
-          <button onClick={() => setJoinForm(true)}>Join Room</button>
+          <button
+            onClick={() => {
+              setJoinForm(true);
+              setShowForm(false);
+            }}
+          >
+            Join Room
+          </button>
         ) : (
           <div>
             <h2>Available Rooms</h2>
