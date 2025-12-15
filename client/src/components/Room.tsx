@@ -1,7 +1,11 @@
 import { createRoom } from "../api/roomApi";
 import { useEffect, useState } from "react";
 import { getRooms, joinRoom } from "../api/roomApi";
+// import Problem from "./Problem";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
+// import { useNavigate } from "react-router-dom";
 
 export interface RoomType {
   _id: string;
@@ -16,6 +20,7 @@ function Room() {
   const [rooms, setRooms] = useState<RoomType[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [showJoinForm, setJoinForm] = useState(false);
+  const navigate = useNavigate();
 
   const handleCreateRoom = async () => {
     if (!newRoomName.trim()) return;
@@ -101,7 +106,9 @@ function Room() {
               <option value="30">30 Minutes</option>
             </select>
 
-            <button type="submit">Create</button>
+            <button type="submit" onClick={() => navigate("/problem")}>
+              Create
+            </button>
             <button type="button" onClick={() => setShowForm(false)}>
               Cancel
             </button>
@@ -126,7 +133,10 @@ function Room() {
                 <li key={room._id}>
                   {room.name} ({room.participants.length} participants)
                   <button
-                    onClick={() => handleJoin(room._id)}
+                    onClick={() => {
+                      handleJoin(room._id);
+                      navigate("/problem");
+                    }}
                     disabled={room.participants.includes(user)}
                   >
                     {room.participants.includes(user) ? "Joined" : "Join"}
