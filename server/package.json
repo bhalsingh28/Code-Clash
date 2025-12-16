@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch . --ext ts --exec ts-node index.ts",
     "build": "tsc",
-    "start": "node /index.ts"
+    "start": "node /index.ts",
+    "import:problems": "ts-node scripts/importProblems.ts"
   },
   "keywords": [],
   "author": "",
