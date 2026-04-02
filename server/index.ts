@@ -1,17 +1,31 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import connetDB from "./db";
 import roomRoutes from "./routes/roomRoutes";
 import problemRoutes from "./routes/problemRoutes";
+import gameRoutes from "./routes/gameRoutes";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const app = express();
 const PORT = 5000;
+
+// Create HTTP server for Socket.IO
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+});
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
 app.use("/rooms", roomRoutes);
 app.use("/problems", problemRoutes);
+app.use("/game", gameRoutes);
 
 // Connect DB
 connetDB();
@@ -21,6 +35,59 @@ app.get("/", (req, res) => {
   res.json({ message: "Backend is running ✅" });
 });
 
-app.listen(PORT, () => {
+// Socket.IO Events
+const userRooms = new Map<string, string>();
+
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on("join_room", (data: { roomId: string; userId: string }) => {
+    socket.join(data.roomId);
+    userRooms.set(socket.id, data.roomId);
+    io.to(data.roomId).emit("user_joined", {
+      userId: data.userId,
+      message: `${data.userId} joined the room`,
+    });
+  });
+
+  socket.on(
+    "code_update",
+    (data: { roomId: string; userId: string; code: string }) => {
+      socket.to(data.roomId).emit("opponent_code_update", {
+        userId: data.userId,
+        code: data.code,
+      });
+    },
+  );
+
+  socket.on("game_started", (data: { roomId: string; problem: any }) => {
+    io.to(data.roomId).emit("game_started", { problem: data.problem });
+  });
+
+  socket.on(
+    "code_submitted",
+    (data: { roomId: string; userId: string; isCorrect: boolean }) => {
+      io.to(data.roomId).emit("submission_received", {
+        userId: data.userId,
+        isCorrect: data.isCorrect,
+      });
+    },
+  );
+
+  socket.on("game_finished", (data: { roomId: string; winner: string }) => {
+    io.to(data.roomId).emit("game_finished", { winner: data.winner });
+  });
+
+  socket.on("disconnect", () => {
+    const roomId = userRooms.get(socket.id);
+    if (roomId) {
+      io.to(roomId).emit("user_left", { message: "Opponent left the room" });
+      userRooms.delete(socket.id);
+    }
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
+
+httpServer.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

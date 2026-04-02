@@ -7,18 +7,22 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch . --ext ts --exec ts-node index.ts",
     "build": "tsc",
-    "start": "node /index.ts",
-    "import:problems": "ts-node scripts/importProblems.ts"
+    "start": "ts-node index.ts",
+    "import:problems": "ts-node scripts/seedProblems.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^5.1.0",
     "mongoose": "^8.18.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "uuid": "^13.0.0",
+    "vm2": "^3.10.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
