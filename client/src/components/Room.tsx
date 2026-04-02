@@ -1,37 +1,51 @@
 import { createRoom } from "../api/roomApi";
 import { useEffect, useState } from "react";
 import { getRooms, joinRoom } from "../api/roomApi";
-// import Problem from "./Problem";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-// import { useNavigate } from "react-router-dom";
 
 export interface RoomType {
   _id: string;
   name: string;
   participants: string[];
+  difficulty: string;
+  timerMinutes: number;
+  gameStatus: string;
 }
 
 function Room() {
-  const [user, setUser] = useState("Guest");
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("userId");
+    return saved || "Guest";
+  });
   const [newRoomName, setNewRoomName] = useState("");
-  const [refreshFlag, setRefreshFlag] = useState(0);
+  const [difficulty, setDifficulty] = useState("Medium");
+  const [timer, setTimer] = useState("30");
   const [rooms, setRooms] = useState<RoomType[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [showJoinForm, setJoinForm] = useState(false);
   const navigate = useNavigate();
 
+  // Save user to localStorage
+  useEffect(() => {
+    localStorage.setItem("userId", user);
+  }, [user]);
+
   const handleCreateRoom = async () => {
     if (!newRoomName.trim()) return;
     try {
-      await createRoom(newRoomName);
+      const room = await createRoom(newRoomName, difficulty, parseInt(timer));
       setNewRoomName("");
-      setRefreshFlag((prev) => prev + 1);
+      setDifficulty("Medium");
+      setTimer("30");
+      setShowForm(false);
+
+      // Join the room and navigate to game
+      await joinRoom(room._id, user);
+      localStorage.setItem("currentRoomId", room._id);
+      navigate(`/game/${room._id}`);
     } catch (err) {
       console.error("Failed to create room", err);
     }
-    setShowForm(false);
   };
 
   const fetchRooms = async () => {
@@ -45,7 +59,7 @@ function Room() {
 
   useEffect(() => {
     fetchRooms();
-  }, [refreshFlag]);
+  }, []);
 
   const handleJoin = async (roomId: string) => {
     const room = rooms.find((r) => r._id === roomId);
@@ -55,7 +69,8 @@ function Room() {
     }
     try {
       await joinRoom(roomId, user);
-      fetchRooms();
+      localStorage.setItem("currentRoomId", roomId);
+      navigate(`/game/${roomId}`);
     } catch (err) {
       console.error("Failed to join room", err);
     }
@@ -63,6 +78,18 @@ function Room() {
 
   return (
     <>
+      <div className="user-section">
+        <label htmlFor="username">Username:</label>
+        <input
+          id="username"
+          type="text"
+          value={user}
+          onChange={(e) => setUser(e.target.value)}
+          placeholder="Enter your username"
+          maxLength={20}
+        />
+      </div>
+
       <div>
         {!showForm ? (
           <button
@@ -76,7 +103,7 @@ function Room() {
         ) : (
           <form
             onSubmit={(e) => {
-              e.preventDefault(); // stop page reload
+              e.preventDefault();
               handleCreateRoom();
             }}
           >
@@ -85,20 +112,29 @@ function Room() {
               id="roomName"
               name="roomName"
               type="text"
-              value={newRoomName} // use newRoomName
-              onChange={(e) => setNewRoomName(e.target.value)} // update newRoomName
+              value={newRoomName}
+              onChange={(e) => setNewRoomName(e.target.value)}
               placeholder="Enter Room Name"
               autoComplete="off"
             />
 
-            <label htmlFor="problemType">Problem Type : </label>
-            <select name="difficulty" id="difficulty">
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
+            <label htmlFor="difficulty">Problem Difficulty: </label>
+            <select
+              id="difficulty"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+            >
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
             </select>
-            <label htmlFor="timer">Timer : </label>
-            <select name="timer" id="timer">
+
+            <label htmlFor="timer">Time Limit: </label>
+            <select
+              id="timer"
+              value={timer}
+              onChange={(e) => setTimer(e.target.value)}
+            >
               <option value="10">10 Minutes</option>
               <option value="15">15 Minutes</option>
               <option value="20">20 Minutes</option>
@@ -106,21 +142,21 @@ function Room() {
               <option value="30">30 Minutes</option>
             </select>
 
-            <button type="submit" onClick={() => navigate("/problem")}>
-              Create
-            </button>
+            <button type="submit">Create</button>
             <button type="button" onClick={() => setShowForm(false)}>
               Cancel
             </button>
           </form>
         )}
       </div>
+
       <div>
         {!showJoinForm ? (
           <button
             onClick={() => {
               setJoinForm(true);
               setShowForm(false);
+              fetchRooms();
             }}
           >
             Join Room
@@ -128,33 +164,39 @@ function Room() {
         ) : (
           <div>
             <h2>Available Rooms</h2>
-            <ul>
-              {rooms.map((room) => (
-                <li key={room._id}>
-                  {room.name} ({room.participants.length} participants)
-                  <button
-                    onClick={() => {
-                      handleJoin(room._id);
-                      navigate("/problem");
-                    }}
-                    disabled={room.participants.includes(user)}
-                  >
-                    {room.participants.includes(user) ? "Joined" : "Join"}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {rooms.length === 0 ? (
+              <p>No rooms available. Create one!</p>
+            ) : (
+              <ul>
+                {rooms.map((room) => (
+                  <li key={room._id}>
+                    <strong>{room.name}</strong> - {room.difficulty} (
+                    {room.timerMinutes}min)
+                    <br />
+                    Players: {room.participants.length}/2
+                    <button
+                      onClick={() => {
+                        handleJoin(room._id);
+                      }}
+                      disabled={
+                        room.participants.includes(user) ||
+                        room.gameStatus !== "waiting"
+                      }
+                    >
+                      {room.participants.includes(user)
+                        ? "Joined"
+                        : room.gameStatus === "waiting"
+                        ? "Join"
+                        : "In Progress"}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault(); // stop page reload
-                handleCreateRoom();
-              }}
-            >
-              <button type="button" onClick={() => setJoinForm(false)}>
-                Cancel
-              </button>
-            </form>
+            <button type="button" onClick={() => setJoinForm(false)}>
+              Cancel
+            </button>
           </div>
         )}
       </div>

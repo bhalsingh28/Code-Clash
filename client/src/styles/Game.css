@@ -1,0 +1,223 @@
+.game-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.game-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.timer {
+  font-size: 24px;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-family: "Monaco", monospace;
+}
+
+.game-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.problem-section {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.problem-card {
+  background: white;
+  color: #333;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-y: auto;
+  max-height: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.problem-card h2 {
+  margin-top: 0;
+  color: #667eea;
+  font-size: 24px;
+}
+
+.problem-card h3 {
+  color: #764ba2;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.difficulty {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 1rem;
+}
+
+.difficulty.easy {
+  background: #d4edda;
+  color: #155724;
+}
+
+.difficulty.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.difficulty.hard {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.problem-description {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.problem-description p {
+  margin: 0.75rem 0;
+}
+
+.test-cases {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.test-case {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.test-case:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.test-case p {
+  margin: 0.5rem 0;
+  font-family: "Monaco", monospace;
+  font-size: 13px;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.editor-section {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-section {
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+.players-info {
+  background: white;
+  color: #333;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.players-info h3 {
+  margin-top: 0;
+  color: #667eea;
+}
+
+.player-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f5f5f5;
+  margin-bottom: 0.75rem;
+  border-radius: 6px;
+  border-left: 4px solid #667eea;
+}
+
+.status-badge {
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background: #e9ecef;
+  color: #333;
+}
+
+.game-finished {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+}
+
+.game-finished h1 {
+  font-size: 48px;
+  margin-bottom: 1rem;
+}
+
+.game-finished h2 {
+  font-size: 32px;
+  margin-bottom: 2rem;
+}
+
+.game-finished button {
+  padding: 1rem 2rem;
+  font-size: 18px;
+  font-weight: 600;
+  background: white;
+  color: #667eea;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.game-finished button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1200px) {
+  .game-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .problem-section,
+  .editor-section,
+  .status-section {
+    grid-column: 1 !important;
+  }
+}
