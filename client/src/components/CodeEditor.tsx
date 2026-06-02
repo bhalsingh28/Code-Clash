@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import "../styles/CodeEditor.css";
 
 interface CodeEditorProps {
@@ -8,152 +8,16 @@ interface CodeEditorProps {
   isSubmitted?: boolean;
 }
 
-// C++ class templates for each problem (LeetCode style)
-const cpluslusTemplates: { [key: string]: string } = {
-  "Two Sum": `#include <bits/stdc++.h>
+const defaultTemplate = `#include <bits/stdc++.h>
 using namespace std;
 
-class Solution {
-public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+int main() {
 
-        // YOUR CODE HERE
+    // YOUR CODE HERE
 
-    }
-};`,
-
-  "Reverse String": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    string reverseString(string s) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Palindrome Number": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    bool isPalindrome(int x) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Contains Duplicate": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    bool containsDuplicate(vector<int>& nums) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Valid Parentheses": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    bool isValid(string s) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Longest Substring Without Repeating Characters": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Maximum Subarray": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    int maxSubArray(vector<int>& nums) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Binary Search": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    int search(vector<int>& nums, int target) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Remove Duplicates from Sorted Array": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    int removeDuplicates(vector<int>& nums) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Sum of Two Numbers": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    int sum(int a, int b) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Factorial": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    int factorial(int n) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-
-  "Fibonacci Number": `#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
-public:
-    int fib(int n) {
-
-        // YOUR CODE HERE
-
-    }
-};`,
-};
+    return 0;
+}
+`;
 
 function CodeEditor({
   problemTitle = "",
@@ -161,16 +25,11 @@ function CodeEditor({
   disabled = false,
   isSubmitted = false,
 }: CodeEditorProps) {
-  const [code, setCode] = useState(
-    cpluslusTemplates[problemTitle] ||
-      `#include <bits/stdc++.h>
-using namespace std;
+  const [code, setCode] = useState(defaultTemplate);
 
-class Solution {
-public:
-    // YOUR CODE HERE
-};`
-  );
+  useEffect(() => {
+    setCode(defaultTemplate);
+  }, [problemTitle]);
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setCode(e.target.value);
@@ -178,18 +37,23 @@ public:
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (code.trim()) {
-      onSubmit(code);
+
+    if (!code.trim()) {
+      return;
     }
+
+    onSubmit(code);
   };
 
   return (
     <div className="code-editor-container">
       <form onSubmit={handleSubmit}>
         <label htmlFor="code-input">C++ Solution:</label>
+
         <div className="editor-info">
-          📝 Only edit the <code>// YOUR CODE HERE</code> section inside the class
+          📝 Write a complete C++ program including <code>main()</code>
         </div>
+
         <textarea
           id="code-input"
           className="code-input"
@@ -199,8 +63,9 @@ public:
           disabled={disabled}
           rows={20}
           cols={50}
-          spellCheck="false"
+          spellCheck={false}
         />
+
         <button
           type="submit"
           disabled={disabled || isSubmitted}
@@ -214,5 +79,3 @@ public:
 }
 
 export default CodeEditor;
-
-

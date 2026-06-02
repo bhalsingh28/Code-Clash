@@ -25,7 +25,7 @@ function Problem() {
     fetchProblem();
   }, []);
 
-  if (!problem) return <p>Loading problem...</p>;
+  if (!problem) return <p>Loading problem.</p>;
 
   return (
     <div>

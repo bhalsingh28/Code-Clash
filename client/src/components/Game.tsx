@@ -48,6 +48,13 @@ function Game() {
 
     newSocket.on("game_started", (data) => {
       setProblem(data.problem);
+      if (data.startedAt && data.timerMinutes) {
+        const startTime = new Date(data.startedAt).getTime();
+        const totalSeconds = data.timerMinutes * 60;
+        const elapsedSeconds = (Date.now() - startTime) / 1000;
+        const remaining = Math.max(0, totalSeconds - elapsedSeconds);
+        setTimeLeft(remaining);
+      }
     });
 
     newSocket.on("submission_received", (data) => {
@@ -191,7 +198,7 @@ function Game() {
                 </div>
               </>
             ) : (
-              <p>Loading problem...</p>
+              <p>Loading problem solve</p>
             )}
           </div>
         </div>
