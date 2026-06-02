@@ -7,9 +7,13 @@ import problemRoutes from "./routes/problemRoutes";
 import gameRoutes from "./routes/gameRoutes";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import Room from "./models/Room";
+import Problem from "./models/Problem";
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT;
 
 // Create HTTP server for Socket.IO
 const httpServer = createServer(app);
@@ -41,13 +45,37 @@ const userRooms = new Map<string, string>();
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  socket.on("join_room", (data: { roomId: string; userId: string }) => {
+  socket.on("join_room", async (data: { roomId: string; userId: string }) => {
     socket.join(data.roomId);
     userRooms.set(socket.id, data.roomId);
     io.to(data.roomId).emit("user_joined", {
       userId: data.userId,
       message: `${data.userId} joined the room`,
     });
+
+    // Check if game should start (when 2 players are in room)
+    try {
+      const room = await Room.findById(data.roomId);
+      if (room && room.gameStatus === "playing" && room.problemId) {
+        const problem = await Problem.findById(room.problemId);
+        if (problem) {
+          io.to(data.roomId).emit("game_started", {
+            problem: {
+              _id: problem._id.toString(),
+              title: problem.title,
+              description: problem.description,
+              difficulty: problem.difficulty,
+              testCases: problem.testCases,
+            },
+            startedAt: room.startedAt,
+            timerMinutes: room.timerMinutes,
+          });
+          console.log(`🎮 Game started in room ${data.roomId}`);
+        }
+      }
+    } catch (err) {
+      console.error("Error checking game status:", err);
+    }
   });
 
   socket.on(

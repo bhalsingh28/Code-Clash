@@ -8,7 +8,8 @@
     "dev": "nodemon --watch . --ext ts --exec ts-node index.ts",
     "build": "tsc",
     "start": "ts-node index.ts",
-    "import:problems": "ts-node scripts/seedProblems.ts"
+    "import:problems": "ts-node scripts/seedProblems.ts",
+    "seed": "ts-node scripts/seedProblems.ts"
   },
   "keywords": [],
   "author": "",

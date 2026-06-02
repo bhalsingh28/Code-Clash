@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connetDB = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/codeclash");
+    await mongoose.connect(process.env.MONGODB_URI!);
     console.log("MongoDB Connected");
   } catch (error) {
     console.error("Mongoose Connection Error", error);
