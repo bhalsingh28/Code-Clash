@@ -135,10 +135,8 @@ function Room() {
               value={timer}
               onChange={(e) => setTimer(e.target.value)}
             >
-              <option value="10">10 Minutes</option>
               <option value="15">15 Minutes</option>
               <option value="20">20 Minutes</option>
-              <option value="25">25 Minutes</option>
               <option value="30">30 Minutes</option>
             </select>
 
