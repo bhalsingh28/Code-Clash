@@ -13,7 +13,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 // Create HTTP server for Socket.IO
 const httpServer = createServer(app);
@@ -117,3 +117,7 @@ io.on("connection", (socket) => {
 });
 
 httpServer.listen(PORT);
+
+// Access to XMLHttpRequest at 'https://code-clash-v1.onrender.com/socket.io/?EIO=4&transport=polling&t=pwvnz7gt'
+// from origin 'https://codeclash-78fr.onrender.com' has been blocked by CORS policy:
+// The 'Access-Control-Allow-Origin' header has a value 'http://localhost:5173' that is not equal to the supplied origin.
