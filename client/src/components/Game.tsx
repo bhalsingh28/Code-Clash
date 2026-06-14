@@ -1,8 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getGameStatus, submitCode } from "../api/roomApi";
-// import CodeEditor from "./CodeEditor";
-// import MonacoEditor from "./MonacoEditor";
 import MonacoEditor from "./MonacoEditor";
 
 import "../styles/Game.css";
@@ -44,10 +42,6 @@ function Game() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [currentUser] = useState(localStorage.getItem("userId") || "Guest");
   const [gameFinished, setGameFinished] = useState(false);
-
-  useEffect(() => {
-    console.log("GAME RENDER");
-  });
 
   useEffect(() => {
     const newSocket = io("http://localhost:5000");

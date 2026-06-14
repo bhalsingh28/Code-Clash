@@ -1,8 +1,15 @@
+import iconUrl from "/icon.svg";
+import "../styles/Profile.css";
+
 function Profile() {
   return (
     <>
       <div>
-        <h1> Code-Clash Rooms</h1>
+        <div className="header">
+          <img src={iconUrl} alt="Code Clash" />
+          <h1> Code-Clash Rooms</h1>
+        </div>
+
         <div>
           <ul>
             <li>Create a room</li>
