@@ -8,6 +8,8 @@ import MonacoEditor from "./MonacoEditor";
 import "../styles/Game.css";
 import io, { Socket } from "socket.io-client";
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 interface Problem {
   _id: string;
   title: string;
@@ -50,7 +52,7 @@ function Game() {
   });
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5000");
+    const newSocket = io(BASE_URL);
     setSocket(newSocket);
 
     newSocket.on("game_started", (data) => {

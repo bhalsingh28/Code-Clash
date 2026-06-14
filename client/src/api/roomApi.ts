@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const getRooms = async () => {
   const res = await axios.get(`${BASE_URL}/rooms`);
