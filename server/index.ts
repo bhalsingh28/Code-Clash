@@ -15,12 +15,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+console.log("FRONTEND_URL =", process.env.FRONTEND_URL);
+
 // Create HTTP server for Socket.IO
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
