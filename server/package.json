@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch . --ext ts --exec ts-node index.ts",
     "build": "tsc",
-    "start": "ts-node index.ts",
+    "start": "node dist/index.js",
     "import:problems": "ts-node scripts/seedProblems.ts",
     "seed": "ts-node scripts/seedProblems.ts"
   },
