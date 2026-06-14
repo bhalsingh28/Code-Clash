@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import Problem from "../models/Problem";
+import dotenv from "dotenv";
+dotenv.config();
 
 const problems = [
   {
@@ -117,7 +119,8 @@ const problems = [
 ];
 const seedProblems = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/codeclash");
+    console.log(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI!);
     console.log("✅ Connected to MongoDB");
 
     // Clear existing problems

@@ -19,7 +19,7 @@ const PORT = process.env.PORT;
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST"],
   },
 });
@@ -36,14 +36,14 @@ connetDB();
 
 // Test route
 app.get("/", (req, res) => {
-  res.json({ message: "Backend is running ✅" });
+  res.json({ message: "Backend is running..." });
 });
 
 // Socket.IO Events
 const userRooms = new Map<string, string>();
 
 io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
+  // console.log(`User connected: ${socket.id}`);
 
   socket.on("join_room", async (data: { roomId: string; userId: string }) => {
     socket.join(data.roomId);
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
             startedAt: room.startedAt,
             timerMinutes: room.timerMinutes,
           });
-          console.log(`🎮 Game started in room ${data.roomId}`);
+          // console.log(`🎮 Game started in room ${data.roomId}`);
         }
       }
     } catch (err) {
@@ -112,10 +112,8 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("user_left", { message: "Opponent left the room" });
       userRooms.delete(socket.id);
     }
-    console.log(`User disconnected: ${socket.id}`);
+    // console.log(`User disconnected: ${socket.id}`);
   });
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+httpServer.listen(PORT);
