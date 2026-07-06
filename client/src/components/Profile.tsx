@@ -1,8 +1,8 @@
 function Profile() {
   return (
     <>
-      <div>
-        <h1> Code-Clash Rooms</h1>
+      <div className="header flex col">
+        <h1 className=""> Code-Clash Rooms</h1>
         <div>
           <ul>
             <li>Create a room</li>

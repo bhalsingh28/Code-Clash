@@ -7,6 +7,7 @@ import MonacoEditor from "./MonacoEditor";
 
 import "../styles/Game.css";
 import io, { Socket } from "socket.io-client";
+import Header from "./Header";
 
 interface Problem {
   _id: string;
@@ -172,6 +173,7 @@ function Game() {
 
   return (
     <div className="game-container">
+      <Header />
       <div className="game-header">
         <h1>Code Clash - {room?.name}</h1>
         <div className="timer">⏱️ {formatTime(timeLeft)}</div>
