@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+
+  --color-red: #fe7971;
+  --color-white: #dfdfd6;
+  --color-gray-white: #98989f;
+  --color-gold: #4e411e;
+  --color-primary-black: #1b1b1f;
+  --color-secondary-black: #32333d;
+  --color-tertiary-black: #414853;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Smooth transitions */
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* Navbar animation */
+nav {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero text animation */
+h1 {
+  animation: fadeIn 0.6s ease 0.2s both;
+}
+
+h2 {
+  animation: fadeIn 0.6s ease 0.4s both;
+}
+
+p {
+  animation: fadeIn 0.6s ease 0.6s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
