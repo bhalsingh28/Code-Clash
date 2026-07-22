@@ -39,14 +39,13 @@ function App() {
             </div>
 
             {/* Buttons */}
+
             <div className="flex flex-wrap gap-3 mb-14">
+              {" "}
               <button className="px-4 py-2 bg-red rounded-full font-medium text-[#fff] hover:shadow-lg hover:bg-[#ff5147] transition">
-                Join Room
+                Private Room
               </button>
-              <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700  transition">
-                Create Room
-              </button>
-              <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700  transition">
+              <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700 transition">
                 Problems
               </button>
               <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700 transition">

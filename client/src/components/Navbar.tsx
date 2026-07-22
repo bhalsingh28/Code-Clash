@@ -6,7 +6,7 @@ function Navbar() {
     <>
       {/* Navbar */}
 
-      <nav className="border-b border-gray-800 bg-primary-black backdrop-blur">
+      <nav className="sticky top-0 z-50 border-b border-gray-800 bg-primary-black backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img className="w-7 h-7 rounded-full" src={logoIcon} alt="" />

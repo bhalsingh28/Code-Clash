@@ -62,6 +62,7 @@ function Game() {
         const elapsedSeconds = (Date.now() - startTime) / 1000;
         const remaining = Math.max(0, totalSeconds - elapsedSeconds);
         setTimeLeft(remaining);
+
       }
     });
 
