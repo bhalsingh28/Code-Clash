@@ -17,6 +17,7 @@ function Problem() {
       try {
         const data = await getProblem();
         setProblem(data);
+        console.log(data);
       } catch (err) {
         console.error("Failed to fetch problem", err);
       }

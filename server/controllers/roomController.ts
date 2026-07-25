@@ -14,9 +14,8 @@ export const getRooms = async (req: Request, res: Response) => {
 // Create a new Room
 export const createRoom = async (req: Request, res: Response) => {
   try {
-    const { name, difficulty = "Medium", timerMinutes = 30 } = req.body;
+    const { difficulty = "Medium", timerMinutes = 30 } = req.body;
     const room = await Room.create({
-      name,
       difficulty,
       timerMinutes,
       participants: [],
@@ -37,9 +36,10 @@ export const joinRoom = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Room not found" });
     }
     // Check for already joined
-    if (room.participants.includes(user)) {
-      return res.status(400).json({ error: "User already joined" });
-    }
+
+    // if (room.participants.includes(user)) {
+    //   return res.status(400).json({ error: "User already joined" });
+    // }
     // Add user
     room.participants.push(user);
 

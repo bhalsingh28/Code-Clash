@@ -1,5 +1,6 @@
 import logoIcon from "../assets/logo.png";
 import profilePic from "../assets/profile.jpeg";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
@@ -14,21 +15,25 @@ function Navbar() {
           </div>
 
           <div className="hidden md:flex justify-center items-center gap-5">
-            <a href="#" className="text-red font-medium">
+            <Link to="/" className="text-red font-medium">
               Home
-            </a>
-            <a href="#" className="text-white hover:text-red transition">
-              Online Compiler
-            </a>
-            <a href="#" className="text-white hover:text-red transition">
-              Problems
-            </a>
-            <a href="#" className="text-white hover:text-red transition">
-              Practise
-            </a>
-            <a href="#" className="text-white hover:text-red transition">
+            </Link>
+            <Link to="/room" className="text-white hover:text-red transition">
               Room
-            </a>
+            </Link>
+            <Link
+              to="/Online-Compiler"
+              className="text-white hover:text-red transition"
+            >
+              Online Compiler
+            </Link>
+            <Link
+              to="/practise"
+              className="text-white hover:text-red transition"
+            >
+              Practise
+            </Link>
+
             <button className="w-6 h-6 rounded-full overflow-hidden hover:ring-2 hover:ring-gray-500 transition">
               <img
                 src={profilePic}

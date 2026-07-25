@@ -1,13 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getGameStatus, submitCode } from "../api/roomApi";
-// import CodeEditor from "./CodeEditor";
-// import MonacoEditor from "./MonacoEditor";
 import MonacoEditor from "./MonacoEditor";
-
+import Navbar from "./Navbar";
 import "../styles/Game.css";
 import io, { Socket } from "socket.io-client";
-import Header from "./Header";
 
 interface Problem {
   _id: string;
@@ -54,6 +51,22 @@ function Game() {
     const newSocket = io("http://localhost:5000");
     setSocket(newSocket);
 
+    newSocket.on("connect", () => {
+      console.log("Connected:", newSocket.id);
+      console.log("roomId =", roomId);
+      console.log("currentUser =", currentUser);
+
+      if (roomId) {
+        console.log("Emitting join_room");
+        newSocket.emit("join_room", {
+          roomId,
+          userId: currentUser,
+        });
+      } else {
+        console.log("roomId is falsy");
+      }
+    });
+
     newSocket.on("game_started", (data) => {
       setProblem(data.problem);
       if (data.startedAt && data.timerMinutes) {
@@ -62,7 +75,6 @@ function Game() {
         const elapsedSeconds = (Date.now() - startTime) / 1000;
         const remaining = Math.max(0, totalSeconds - elapsedSeconds);
         setTimeLeft(remaining);
-
       }
     });
 
@@ -173,71 +185,74 @@ function Game() {
   }
 
   return (
-    <div className="game-container">
-      <Header />
-      <div className="game-header">
-        <h1>Code Clash - {room?.name}</h1>
-        <div className="timer">⏱️ {formatTime(timeLeft)}</div>
-      </div>
+    <div>
+      <Navbar />
+      <div className="game-container">
+        <div className="game-header">
+          <div className="timer">⏱️ {formatTime(timeLeft)}</div>
+        </div>
 
-      <div className="game-content">
-        <div className="problem-section">
-          <div className="problem-card">
-            {problem ? (
-              <>
-                <h2>{problem.title}</h2>
-                <p className={`difficulty ${problem.difficulty.toLowerCase()}`}>
-                  Difficulty: {problem.difficulty}
-                </p>
-                <div className="problem-description">
-                  <h3>Problem Statement:</h3>
-                  <p>{problem.description}</p>
-                </div>
-                <div className="test-cases">
-                  <h3>Test Cases:</h3>
-                  {problem.testCases.map((tc, idx) => (
-                    <div key={idx} className="test-case">
-                      <p>
-                        <strong>Input:</strong> {tc.input}
-                      </p>
-                      <p>
-                        <strong>Output:</strong> {tc.output}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <p>Loading problem solve</p>
-            )}
+        <div className="game-content">
+          <div className="problem-section">
+            <div className="problem-card">
+              {problem ? (
+                <>
+                  <h2>{problem.title}</h2>
+                  <p
+                    className={`difficulty ${problem.difficulty.toLowerCase()}`}
+                  >
+                    Difficulty: {problem.difficulty}
+                  </p>
+                  <div className="problem-description">
+                    <h3>Problem Statement:</h3>
+                    <p>{problem.description}</p>
+                  </div>
+                  <div className="test-cases">
+                    <h3>Test Cases:</h3>
+                    {problem.testCases.map((tc, idx) => (
+                      <div key={idx} className="test-case">
+                        <p>
+                          <strong>Input:</strong> {tc.input}
+                        </p>
+                        <p>
+                          <strong>Output:</strong> {tc.output}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p>Loading problem solve</p>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <MonacoEditor
-            problemTitle={problem?.title}
-            onSubmit={handleSubmitCode}
-            disabled={gameFinished}
-            isSubmitted={hasSubmitted}
-          />
-        </div>
+          <div>
+            <MonacoEditor
+              problemTitle={problem?.title}
+              onSubmit={handleSubmitCode}
+              disabled={gameFinished}
+              isSubmitted={hasSubmitted}
+            />
+          </div>
 
-        <div className="status-section">
-          <div className="players-info">
-            <h3>Players:</h3>
-            {room?.participants.map((participant) => (
-              <div key={participant} className="player-status">
-                <span>{participant}</span>
-                {submissions.find((s) => s.userId === participant) && (
-                  <span className="status-badge">
-                    {submissions.find((s) => s.userId === participant)
-                      ?.isCorrect
-                      ? "✅ Correct"
-                      : "❌ Wrong"}
-                  </span>
-                )}
-              </div>
-            ))}
+          <div className="status-section">
+            <div className="players-info">
+              <h3>Players:</h3>
+              {room?.participants.map((participant) => (
+                <div key={participant} className="player-status">
+                  <span>{participant}</span>
+                  {submissions.find((s) => s.userId === participant) && (
+                    <span className="status-badge">
+                      {submissions.find((s) => s.userId === participant)
+                        ?.isCorrect
+                        ? "✅ Correct"
+                        : "❌ Wrong"}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

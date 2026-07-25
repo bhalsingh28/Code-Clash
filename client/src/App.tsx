@@ -1,19 +1,17 @@
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import Home from "./components/Home";
-// import Game from "./components/Game";
-import "./styles.css";
-import NewApp from "./NewApp";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NewHome from "./pages/NewHome";
+import NewRoom from "./pages/NewRoom";
+import Game from "./components/Game";
 
 function App() {
   return (
-    // <Router>
-    //   <Routes>
-    //     <Route path="/" element={<Home />} />
-    //     <Route path="/game/:roomId" element={<Game />} />
-    //   </Routes>
-    // </Router>
-
-    <NewApp />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<NewHome />} />
+        <Route path="/room" element={<NewRoom />} />
+        <Route path="/room/:roomId" element={<Game />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,5 +1,7 @@
-import "./newStyles.css";
-import Navbar from "./components/Navbar";
+import "../newStyles.css";
+import Navbar from "../components/Navbar";
+import Animate from "../components/Animate";
+import { Link } from "react-router-dom";
 
 interface CardProps {
   icon: string;
@@ -17,40 +19,45 @@ const Card = ({ icon, title, description }: CardProps) => (
   </div>
 );
 
-function App() {
+function NewHome() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-linear-to-b bg-primary-black text-white">
+      <div className="min-h-screen bg-primary-black text-white">
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="mx-20">
-            <div className="mb-12 flex-col items-start">
-              <h1 className="text-6xl font-bold mb-4">
-                <span className="bg-clip-text text-red">CodeClash</span>
-              </h1>
-              <h2 className="text-4xl text-white font-bold mb-4">
-                Solve. Practise. Compete.
-              </h2>
-              <p className="text-gray-white text-lg max-w-2xl">
-                Solve coding challenges, compete in real-time contests, and
-                sharpen your DSA skills with friends.
-              </p>
-            </div>
+          <div className="mx-15">
+            <div className="flex">
+              <div className="mb-8 mt-8 flex-col items-start">
+                <h1 className="text-6xl font-bold mb-5">
+                  <span className="bg-clip-text text-red">CodeClash</span>
+                </h1>
+                <h2 className="text-4xl text-white font-bold mb-5">
+                  Solve. Practise. Compete.
+                </h2>
+                <p className="text-gray-white text-lg max-w-2xl mb-8">
+                  Solve coding challenges, compete in real-time contests, and
+                  sharpen your DSA skills with friends.
+                </p>
 
-            {/* Buttons */}
+                {/* Buttons */}
 
-            <div className="flex flex-wrap gap-3 mb-14">
-              {" "}
-              <button className="px-4 py-2 bg-red rounded-full font-medium text-[#fff] hover:shadow-lg hover:bg-[#ff5147] transition">
-                Private Room
-              </button>
-              <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700 transition">
-                Problems
-              </button>
-              <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700 transition">
-                Practise
-              </button>
+                <div className="flex flex-wrap gap-3 mb-6 mt-12">
+                  {" "}
+                  <button className="px-4 py-2 bg-red rounded-full font-medium text-[#fff] hover:shadow-lg hover:bg-[#ff5147] transition">
+                    <Link to="/room">Private Room</Link>
+                  </button>
+                  <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700 transition">
+                    <Link to="/online-compiler">Online Compiler</Link>
+                  </button>
+                  <button className="px-4 py-2 bg-secondary-black rounded-full font-medium hover:bg-gray-700 transition">
+                    <Link to="/practise">Practise</Link>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <Animate />
+              </div>
             </div>
 
             {/* Cards Grid */}
@@ -112,4 +119,4 @@ function App() {
   );
 }
 
-export default App;
+export default NewHome;

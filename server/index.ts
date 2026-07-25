@@ -46,7 +46,10 @@ io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
   socket.on("join_room", async (data: { roomId: string; userId: string }) => {
+    console.log("JOIN_ROOM", data);
     socket.join(data.roomId);
+    console.log("Joined socket room:", data.roomId);
+
     userRooms.set(socket.id, data.roomId);
     io.to(data.roomId).emit("user_joined", {
       userId: data.userId,

@@ -7,6 +7,7 @@ const router = Router();
 router.get("/", async (req, res) => {
   try {
     const problems = await Problem.find();
+    console.log(problems);
     res.json(problems);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch Problem" });

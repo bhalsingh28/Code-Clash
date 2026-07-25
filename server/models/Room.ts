@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IRoom extends Document {
-  name: string;
+  name: string | null;
   participants: string[];
   difficulty: "Easy" | "Medium" | "Hard";
   timerMinutes: number;
@@ -15,7 +15,7 @@ export interface IRoom extends Document {
 
 const RoomSchema = new Schema<IRoom>(
   {
-    name: { type: String, required: true },
+    name: { type: String },
     participants: [{ type: String }],
     difficulty: {
       type: String,

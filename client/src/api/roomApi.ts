@@ -7,13 +7,8 @@ export const getRooms = async () => {
   return res.data;
 };
 
-export const createRoom = async (
-  name: string,
-  difficulty: string,
-  timerMinutes: number,
-) => {
+export const createRoom = async (difficulty: string, timerMinutes: number) => {
   const res = await axios.post(`${BASE_URL}/rooms`, {
-    name,
     difficulty,
     timerMinutes,
   });
@@ -26,7 +21,7 @@ export const joinRoom = async (id: string, user: string) => {
 };
 
 export const startGame = async (roomId: string) => {
-  const res = await axios.post(`${BASE_URL}/game/start`, { roomId });
+  const res = await axios.post(`${BASE_URL}/room/`, { roomId });
   return res.data;
 };
 
