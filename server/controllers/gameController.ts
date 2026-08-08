@@ -93,7 +93,9 @@ export const submitCode = async (req: Request, res: Response) => {
     }
 
     // Validate C++ code against test cases
-    const isCorrect = await validateCppCode(code, problem);
+    // const result = await validateCppCode(code, problem, "");
+    const validation = await validateCppCode(code, problem, "");
+    const isCorrect = validation.isCorrect;
 
     // Save submission
     const submission = await Submission.create({
@@ -115,6 +117,8 @@ export const submitCode = async (req: Request, res: Response) => {
       isCorrect,
       submission,
       roomStatus: room,
+      wrongTestCases: validation.wrongTestCases,
+      error: validation.error,
     });
   } catch (err) {
     console.error(err);
@@ -160,11 +164,22 @@ export const getGameStatus = async (req: Request, res: Response) => {
   }
 };
 
-async function validateCppCode(code: string, problem: any): Promise<boolean> {
+type ValidationResult = {
+  isCorrect: boolean;
+  wrongTestCases: number[];
+  error: string;
+};
+
+async function validateCppCode(
+  code: string,
+  problem: any,
+  error: string,
+): Promise<ValidationResult> {
   try {
+    let wrongTestCases: number[] = [];
     if (!problem?.testCases?.length) {
       console.log("⚠️ No test cases found");
-      return true;
+      return { isCorrect: true, wrongTestCases: [], error: "" };
     }
 
     const headers = {
@@ -207,7 +222,7 @@ async function validateCppCode(code: string, problem: any): Promise<boolean> {
           source_code: code,
           stdin: tc.input,
         });
-        return false;
+        return { isCorrect: false, wrongTestCases, error: "Wrong Answer!" };
       }
 
       const result: any = await response.json();
@@ -216,34 +231,47 @@ async function validateCppCode(code: string, problem: any): Promise<boolean> {
       if (result.compile_output) {
         console.log("❌ Compilation Error");
         console.log(result.compile_output);
-        return false;
+        return {
+          isCorrect: false,
+          wrongTestCases,
+          error: result.compile_output || "Compile Time Error!",
+        };
       }
 
       // Runtime Error
       if (result.stderr) {
         console.log("❌ Runtime Error");
         console.log(result.stderr);
-        return false;
+        return {
+          isCorrect: false,
+          wrongTestCases,
+          error: result.stderr || "Runtime Error!",
+        };
       }
 
       const actual = (result.stdout || "").trim();
       const expected = (tc.output || "").trim();
 
       if (actual !== expected) {
+        wrongTestCases.push(i + 1);
         console.log(`❌ Wrong Answer on Test Case ${i + 1}`);
         console.log(`Input: ${tc.input}`);
         console.log(`Expected: ${expected}`);
         console.log(`Actual: ${actual}`);
-        return false;
+        return { isCorrect: false, wrongTestCases, error: "Wrong Answer!" };
       }
 
       console.log(`✅ Test Case ${i + 1} Passed`);
     }
 
     console.log("🎉 All Test Cases Passed");
-    return true;
+    return { isCorrect: true, wrongTestCases: [], error: "" };
   } catch (error) {
     console.error("Validation Error:", (error as any).message);
-    return false;
+    return {
+      isCorrect: false,
+      wrongTestCases: [],
+      error: (error as any).message || "Validation Error!",
+    };
   }
 }

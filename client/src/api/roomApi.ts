@@ -35,6 +35,7 @@ export const submitCode = async (
     userId,
     code,
   });
+  // console.log(res.data);
   return res.data;
 };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import GameNavbar from "../components/GameNavbar.tsx";
 import Navbar from "../components/Navbar";
 import CreateRoom from "../components/CreateRoom";
 import "../newStyles.css";

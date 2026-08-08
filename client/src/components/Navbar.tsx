@@ -10,8 +10,17 @@ function Navbar() {
       <nav className="sticky top-0 z-50 border-b border-gray-800 bg-primary-black backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <img className="w-7 h-7 rounded-full" src={logoIcon} alt="" />
-            <span className="text-xl text-red font-bold">CodeClash</span>
+            <img
+              className="cursor-pointer w-7 h-7 rounded-full"
+              src={logoIcon}
+              alt=""
+            />
+            <div>
+              <Link to="/">
+                <span className="text-xl text-white font-bold">Code</span>
+                <span className="text-xl text-red font-bold">Clash</span>
+              </Link>
+            </div>
           </div>
 
           <div className="hidden md:flex justify-center items-center gap-5">
