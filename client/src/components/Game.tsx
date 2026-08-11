@@ -5,6 +5,7 @@ import MonacoEditor from "./MonacoEditor";
 import GameNavbar from "./GameNavbar";
 // import "../styles/Game.css";
 import io, { Socket } from "socket.io-client";
+import PopWindow from "./PopWindow";
 
 interface Problem {
   _id: string;
@@ -42,6 +43,7 @@ function Game() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [currentUser] = useState(localStorage.getItem("userId") || "Guest");
   const [gameFinished, setGameFinished] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     console.log("GAME RENDER");
@@ -153,6 +155,10 @@ function Game() {
     if (!roomId) return;
     try {
       const result = await submitCode(roomId, currentUser, code);
+      if (!result.isCorrect) {
+        setShowPopup(true);
+      }
+
       // console.log("1. callind handleSubmitCode");
       // console.log("isCorrect : ", result.isCorrect);
       // console.log("wrongTestCases : ", result.wrongTestCases);
@@ -190,77 +196,6 @@ function Game() {
   }
 
   return (
-    // <div>
-    //   <GameNavbar timeLeft={timeLeft} />
-    //   <div className="game-container">
-    //     <div className="game-content">
-    //       <div className="problem-section">
-    //         <div className="problem-card">
-    //           {problem ? (
-    //             <>
-    //               <h2>{problem.title}</h2>
-    //               <p
-    //                 className={`difficulty ${problem.difficulty.toLowerCase()}`}
-    //               >
-    //                 Difficulty: {problem.difficulty}
-    //               </p>
-    //               <div className="problem-description">
-    //                 <h3>Problem Statement:</h3>
-    //                 <p>{problem.description}</p>
-    //               </div>
-    //               <div className="test-cases">
-    //                 <h3>Test Cases:</h3>
-    //                 {problem.testCases.map((tc, idx) => (
-    //                   <div key={idx} className="test-case">
-    //                     <p>
-    //                       <strong>Input:</strong> {tc.input}
-    //                     </p>
-    //                     <p>
-    //                       <strong>Output:</strong> {tc.output}
-    //                     </p>
-    //                   </div>
-    //                 ))}
-    //               </div>
-    //             </>
-    //           ) : (
-    //             <p>Loading problem solve</p>
-    //           )}
-    //         </div>
-    //       </div>
-
-    //       <div>
-    //         <MonacoEditor
-    //           problemTitle={problem?.title}
-    //           onSubmit={handleSubmitCode}
-    //           disabled={gameFinished}
-    //           isSubmitted={hasSubmitted}
-    //         />
-    //       </div>
-
-    //       <div className="status-section">
-    //         <div className="players-info">
-    //           <h3>Players:</h3>
-    //           {room?.participants.map((participant) => (
-    //             <div key={participant} className="player-status">
-    //               <span>{participant}</span>
-    //               {submissions.find((s) => s.userId === participant) && (
-    //                 <span className="status-badge">
-    //                   {submissions.find((s) => s.userId === participant)
-    //                     ?.isCorrect
-    //                     ? "✅ Correct"
-    //                     : "❌ Wrong"}
-    //                 </span>
-    //               )}
-    //             </div>
-    //           ))}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-
-    // -----------------NEW CSS--------------------------
-
     <div className="min-h-screen bg-primary-black text-white">
       <section className="h-screen flex flex-col">
         <GameNavbar timeLeft={timeLeft} />
@@ -345,6 +280,7 @@ function Game() {
                 isSubmitted={hasSubmitted}
               />
             </div>
+            {showPopup && <PopWindow onClose={() => setShowPopup(false)} />}
 
             <div className="h-3/10 rounded-2xl bg-secondary-black p-4 overflow-y-auto">
               <strong className="mx-2">Test Cases</strong>
