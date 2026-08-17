@@ -7,7 +7,6 @@ import copy from "../assets/copy.svg";
 import reset from "../assets/reset.svg";
 import submit from "../assets/submit.svg";
 import run from "../assets/run.svg";
-import PopWindow from "./PopWindow";
 
 import toast, { Toaster } from "react-hot-toast";
 
@@ -61,9 +60,7 @@ function MonacoEditor({
       return;
     }
     onSubmit(code);
-    setShowPopup(true);
   };
-  const [showPopup, setShowPopup] = useState(false);
 
   return (
     <div className="rounded-2xl  bg-box-black">
@@ -152,7 +149,6 @@ function MonacoEditor({
               <span>Submit</span>
             </div>
           </button>
-          {showPopup && <PopWindow onClose={() => setShowPopup(false)} />}
         </div>
       </div>
     </div>

@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { getGameStatus, submitCode } from "../api/roomApi";
 import MonacoEditor from "./MonacoEditor";
 import GameNavbar from "./GameNavbar";
-// import "../styles/Game.css";
 import io, { Socket } from "socket.io-client";
 import PopWindow from "./PopWindow";
+import Problem from "./Problem";
+import Chat from "./Chat";
 
 interface Problem {
   _id: string;
@@ -44,6 +45,8 @@ function Game() {
   const [currentUser] = useState(localStorage.getItem("userId") || "Guest");
   const [gameFinished, setGameFinished] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [showDescription, setShowDescription] = useState(true);
 
   useEffect(() => {
     console.log("GAME RENDER");
@@ -159,11 +162,6 @@ function Game() {
         setShowPopup(true);
       }
 
-      // console.log("1. callind handleSubmitCode");
-      // console.log("isCorrect : ", result.isCorrect);
-      // console.log("wrongTestCases : ", result.wrongTestCases);
-      // console.log("error : ", result.error);
-
       if (result.wrongTestCases && result.wrongTestCases.length > 0) {
         console.log("Test cases failed");
       } else {
@@ -195,6 +193,16 @@ function Game() {
     );
   }
 
+  const toggleChat = () => {
+    setShowDescription(false);
+    setShowChat(true);
+  };
+
+  const toggleDescription = () => {
+    setShowChat(false);
+    setShowDescription(true);
+  };
+
   return (
     <div className="min-h-screen bg-primary-black text-white">
       <section className="h-screen flex flex-col">
@@ -203,57 +211,25 @@ function Game() {
         <div className="flex flex-1 gap-5 px-5 py-2 overflow-hidden">
           {/* Left Panel */}
           <div className="w-1/3 bg-secondary-black rounded-4xl flex flex-col overflow-hidden">
+            <div className="px-6 py-4 flex">
+              <button
+                onClick={toggleDescription}
+                className="bg-white text-black mr-4 px-2 rounded-[7px]"
+              >
+                Description
+              </button>
+              <button
+                onClick={toggleChat}
+                className="bg-white text-black px-2 rounded-[7px]"
+              >
+                Chat
+              </button>
+            </div>
+
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto px-6">
               {problem ? (
-                <>
-                  <h2 className="text-2xl font-bold">{problem.title}</h2>
-
-                  <p
-                    className={`difficulty ${problem.difficulty.toLowerCase()} mt-2`}
-                  >
-                    <strong>Difficulty : </strong>
-                    {problem.difficulty == "Easy" && (
-                      <strong className="text-green-400">Easy</strong>
-                    )}
-                    {problem.difficulty == "Medium" && (
-                      <strong className="text-yellow-400">Easy</strong>
-                    )}
-                    {problem.difficulty == "Hard" && (
-                      <strong className="text-red-400">Hard</strong>
-                    )}
-                  </p>
-                  <hr className="mt-2" />
-
-                  <div className="mt-2">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Problem Statement
-                    </h3>
-
-                    <p className="whitespace-pre-wrap leading-7">
-                      {problem.description}
-                    </p>
-                  </div>
-
-                  <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-4">Test Cases</h3>
-
-                    {problem.testCases.map((tc, idx) => (
-                      <div
-                        key={idx}
-                        className="mb-4 rounded-xl bg-primary-black p-4"
-                      >
-                        <p>
-                          <strong>Input:</strong> {tc.input}
-                        </p>
-
-                        <p className="mt-2">
-                          <strong>Output:</strong> {tc.output}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </>
+                <>{showChat ? <Chat /> : <Problem problem={problem} />}</>
               ) : (
                 <p>Loading problem...</p>
               )}
@@ -282,7 +258,7 @@ function Game() {
             </div>
             {showPopup && <PopWindow onClose={() => setShowPopup(false)} />}
 
-            <div className="h-3/10 rounded-2xl bg-secondary-black p-4 overflow-y-auto">
+            <div className="h-3/10 rounded-2xl bg-secondary-black p-4  overflow-y-auto scrollbar-thumb-sidebar-accent-foreground">
               <strong className="mx-2">Test Cases</strong>
               <div className="mt-2">
                 {problem ? (
