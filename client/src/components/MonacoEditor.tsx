@@ -7,6 +7,7 @@ import copy from "../assets/copy.svg";
 import reset from "../assets/reset.svg";
 import submit from "../assets/submit.svg";
 import run from "../assets/run.svg";
+import PopWindow from "./PopWindow";
 
 import toast, { Toaster } from "react-hot-toast";
 
@@ -35,6 +36,8 @@ function MonacoEditor({
 }: MonacoEditorProps) {
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
 
+  // const [showPopup, setShowPopup] = useState(false);
+
   function handleEditorDidMount(editor: Monaco.editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
   }
@@ -54,12 +57,14 @@ function MonacoEditor({
     return;
   };
 
-  const handleSubmit = () => {
+  const submitCode = () => {
     const code = editorRef.current?.getValue() || "";
     if (!code.trim()) {
       return;
     }
+    console.log("Inside submit code");
     onSubmit(code);
+    // setShowPopup(true);
   };
 
   return (
@@ -138,17 +143,26 @@ function MonacoEditor({
               <span>Run</span>
             </div>
           </button>
+
+          {/*disabled={disabled || isSubmitted}*/}
+
           <button
             className="bg-[#444bd3] rounded-xl p-2 px-3 hover:bg-[#2e3396]"
-            type="submit"
-            onClick={handleSubmit}
-            disabled={disabled || isSubmitted}
+            type="button"
+            onClick={submitCode}
           >
             <div className="flex items-center gap-2">
               <img className="w-7 h-7" src={submit} alt="" />
               <span>Submit</span>
             </div>
           </button>
+
+          {/*{showPopup && (
+            <PopWindow
+              message="Running Testcases, Please Wait."
+              onClose={() => setShowPopup(false)}
+            />
+          )}*/}
         </div>
       </div>
     </div>

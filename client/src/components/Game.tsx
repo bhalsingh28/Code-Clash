@@ -45,6 +45,7 @@ function Game() {
   const [currentUser] = useState(localStorage.getItem("userId") || "Guest");
   const [gameFinished, setGameFinished] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
   const [showChat, setShowChat] = useState(false);
   const [showDescription, setShowDescription] = useState(true);
 
@@ -156,30 +157,38 @@ function Game() {
 
   const handleSubmitCode = async (code: string) => {
     if (!roomId) return;
+
     try {
+      // Show loading popup
+      setPopupMessage("Running Testcases, Please Wait.");
+      setShowPopup(true);
+
       const result = await submitCode(roomId, currentUser, code);
+
       if (!result.isCorrect) {
-        setShowPopup(true);
+        setPopupMessage("Testcases failed");
+        return;
       }
 
-      if (result.wrongTestCases && result.wrongTestCases.length > 0) {
-        console.log("Test cases failed");
-      } else {
-        console.log("Test cases passed");
-      }
+      // Correct answer
+      setShowPopup(false);
 
-      if (result.isCorrect && !winner) {
+      if (!winner) {
         setWinner(currentUser);
         setGameFinished(true);
+
         socket?.emit("code_submitted", {
           roomId,
           userId: currentUser,
           isCorrect: true,
         });
       }
+
       setHasSubmitted(true);
     } catch (err) {
       console.error("Failed to submit code", err);
+
+      setPopupMessage("Something went wrong");
     }
   };
 
@@ -256,8 +265,12 @@ function Game() {
                 isSubmitted={hasSubmitted}
               />
             </div>
-            {showPopup && <PopWindow onClose={() => setShowPopup(false)} />}
-
+            {showPopup && (
+              <PopWindow
+                message={popupMessage}
+                onClose={() => setShowPopup(false)}
+              />
+            )}
             <div className="h-3/10 rounded-2xl bg-secondary-black p-4  overflow-y-auto scrollbar-thumb-sidebar-accent-foreground">
               <strong className="mx-2">Test Cases</strong>
               <div className="mt-2">
