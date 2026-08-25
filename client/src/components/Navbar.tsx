@@ -1,6 +1,6 @@
 import logoIcon from "../assets/logo.png";
 import profilePic from "../assets/profile.jpeg";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
@@ -16,32 +16,57 @@ function Navbar() {
               alt=""
             />
             <div>
-              <Link to="/">
+              <NavLink to="/">
                 <span className="text-xl text-white font-bold">Code</span>
                 <span className="text-xl text-red font-bold">Clash</span>
-              </Link>
+              </NavLink>
             </div>
           </div>
 
           <div className="hidden md:flex justify-center items-center gap-5">
-            <Link to="/" className="text-red font-medium">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-red font-medium"
+                  : "text-white hover:text-red transition"
+              }
+            >
               Home
-            </Link>
-            <Link to="/room" className="text-white hover:text-red transition">
+            </NavLink>
+
+            <NavLink
+              to="/room"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-red font-medium"
+                  : "text-white hover:text-red transition"
+              }
+            >
               Room
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/Online-Compiler"
-              className="text-white hover:text-red transition"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-red font-medium"
+                  : "text-white hover:text-red transition"
+              }
             >
               Online Compiler
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/practise"
-              className="text-white hover:text-red transition"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-red font-medium"
+                  : "text-white hover:text-red transition"
+              }
             >
               Practise
-            </Link>
+            </NavLink>
 
             <button className="w-6 h-6 rounded-full overflow-hidden hover:ring-2 hover:ring-gray-500 transition">
               <img

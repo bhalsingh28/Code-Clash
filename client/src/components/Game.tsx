@@ -240,7 +240,9 @@ function Game() {
               {problem ? (
                 <>{showChat ? <Chat /> : <Problem problem={problem} />}</>
               ) : (
-                <p>Loading problem...</p>
+                <span className="text-xl">
+                  Waiting for other player to Join...
+                </span>
               )}
             </div>
 
@@ -254,8 +256,8 @@ function Game() {
           </div>
 
           {/* Right Panel */}
-          <div className="w-2/3 flex flex-col gap-2 overflow-hidden">
-            <div className="h-7/10 flex-1 rounded-2xl bg-secondary-black mb-2">
+          <div className="w-2/3 min-h-0 flex flex-col gap-2 overflow-hidden">
+            <div className="flex-[7] min-h-0 rounded-2xl bg-secondary-black overflow-hidden">
               {/* Monaco Editor */}
 
               <MonacoEditor
@@ -271,7 +273,8 @@ function Game() {
                 onClose={() => setShowPopup(false)}
               />
             )}
-            <div className="h-3/10 rounded-2xl bg-secondary-black p-4  overflow-y-auto scrollbar-thumb-sidebar-accent-foreground">
+            <div className="flex-[3] min-h-0 rounded-2xl bg-secondary-black p-4 overflow-y-auto">
+              {" "}
               <strong className="mx-2">Test Cases</strong>
               <div className="mt-2">
                 {problem ? (
@@ -292,7 +295,7 @@ function Game() {
                     ))}
                   </>
                 ) : (
-                  <p>Loading</p>
+                  <p>Waiting for other player to join.</p>
                 )}
               </div>
             </div>

@@ -68,61 +68,40 @@ function MonacoEditor({
   };
 
   return (
-    <div className="rounded-2xl  bg-box-black">
-      <div className="flex h-10 justify-between px-5">
+    <div className="h-full min-h-0 rounded-2xl bg-box-black flex flex-col">
+      {/* Header */}
+      <div className="flex h-10 shrink-0 justify-between px-5">
         <div className="flex items-center gap-1">
           <img className="w-7 h-7" src={code} alt="" />
           <span>Code</span>
         </div>
-        <div className="flex items-center gap-1">
-          {/* <span className="text-xl">C++</span> */}
-          {/* <img className="h-7 w-7" src={down} alt="" /> */}
-        </div>
+
         <div className="flex gap-5">
-          <div className="flex items-center">
-            <button
-              className="p-1.5 hover:bg-[#1E1E1E] hover:rounded-2xl"
-              type="button"
-              onClick={handleCopy}
-              title="Copy Code"
-            >
-              <Toaster
-                toastOptions={{
-                  duration: 1500,
-                  style: {
-                    background: "#363636",
-                    color: "#fff",
-                  },
-                }}
-              />
-              <img className="h-5 w-5" src={copy} alt="" />
-            </button>
-          </div>
-          <div className=" flex items-center ">
-            <button
-              className="p-1.5 hover:bg-[#1E1E1E] hover:rounded-2xl"
-              type="button"
-              onClick={handleReset}
-              title="Reset Editor"
-            >
-              <img className="h-5 w-5" src={reset} alt="Reset" />
-            </button>
-            <Toaster
-              toastOptions={{
-                duration: 1500,
-                style: {
-                  background: "#363636",
-                  color: "#fff",
-                },
-              }}
-            />
-          </div>
+          <button
+            className="p-1.5 hover:bg-[#1E1E1E] hover:rounded-2xl"
+            type="button"
+            onClick={handleCopy}
+            title="Copy Code"
+          >
+            <img className="h-5 w-5" src={copy} alt="" />
+          </button>
+
+          <button
+            className="p-1.5 hover:bg-[#1E1E1E] hover:rounded-2xl"
+            type="button"
+            onClick={handleReset}
+            title="Reset Editor"
+          >
+            <img className="h-5 w-5" src={reset} alt="Reset" />
+          </button>
         </div>
       </div>
 
-      <div className="">
+      {/* Monaco */}
+      <div className="flex-1 min-h-0">
         <Editor
-          height="530px"
+          height="100%"
+          width="100%"
           defaultLanguage="cpp"
           defaultValue={defaultTemplate}
           theme="vs-dark"
@@ -131,39 +110,31 @@ function MonacoEditor({
             automaticLayout: true,
           }}
         />
+      </div>
 
-        <div className="flex gap-4 px-4 py-4">
-          <button
-            className="bg-[#1a991a] rounded-xl p-2 px-3 hover:bg-[#136e13]"
-            onClick={handleRun}
-            type="button"
-          >
-            <div className="flex items-center gap-2">
-              <img className="w-7 h-7" src={run} alt="" />
-              <span>Run</span>
-            </div>
-          </button>
+      {/* Buttons */}
+      <div className="shrink-0 flex gap-4 px-4 py-4">
+        <button
+          className="bg-[#1a991a] rounded-xl p-2 px-3 hover:bg-[#136e13]"
+          onClick={handleRun}
+          type="button"
+        >
+          <div className="flex items-center gap-2">
+            <img className="w-7 h-7" src={run} alt="" />
+            <span>Run</span>
+          </div>
+        </button>
 
-          {/*disabled={disabled || isSubmitted}*/}
-
-          <button
-            className="bg-[#444bd3] rounded-xl p-2 px-3 hover:bg-[#2e3396]"
-            type="button"
-            onClick={submitCode}
-          >
-            <div className="flex items-center gap-2">
-              <img className="w-7 h-7" src={submit} alt="" />
-              <span>Submit</span>
-            </div>
-          </button>
-
-          {/*{showPopup && (
-            <PopWindow
-              message="Running Testcases, Please Wait."
-              onClose={() => setShowPopup(false)}
-            />
-          )}*/}
-        </div>
+        <button
+          className="bg-[#444bd3] rounded-xl p-2 px-3 hover:bg-[#2e3396]"
+          type="button"
+          onClick={submitCode}
+        >
+          <div className="flex items-center gap-2">
+            <img className="w-7 h-7" src={submit} alt="" />
+            <span>Submit</span>
+          </div>
+        </button>
       </div>
     </div>
   );
