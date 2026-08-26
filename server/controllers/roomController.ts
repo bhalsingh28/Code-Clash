@@ -70,3 +70,17 @@ export const joinRoom = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to join room" });
   }
 };
+
+export const deleteRoom = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const room = await Room.findById(id);
+    if (!room) {
+      return res.status(404).json({ error: "Room not found" });
+    }
+    await room.deleteOne();
+    res.json({ message: "Room deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete the room" });
+  }
+};

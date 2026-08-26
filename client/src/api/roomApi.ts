@@ -20,6 +20,11 @@ export const joinRoom = async (id: string, user: string) => {
   return res.data;
 };
 
+export const deleteRoom = async (id: string) => {
+  const res = await axios.delete(`${BASE_URL}/rooms/${id}`);
+  return res.data;
+};
+
 export const startGame = async (roomId: string) => {
   const res = await axios.post(`${BASE_URL}/room/`, { roomId });
   return res.data;

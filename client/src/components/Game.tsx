@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getGameStatus, submitCode } from "../api/roomApi";
+import { getGameStatus, submitCode, deleteRoom } from "../api/roomApi";
 import MonacoEditor from "./MonacoEditor";
 import GameNavbar from "./GameNavbar";
 import io, { Socket } from "socket.io-client";
@@ -212,6 +212,15 @@ function Game() {
     setShowDescription(true);
   };
 
+  const handleLeave = async () => {
+    try {
+      await deleteRoom(roomId);
+      navigate("/");
+    } catch (err) {
+      console.error("Failed to leave room", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-primary-black text-white">
       <section className="h-screen flex flex-col">
@@ -248,7 +257,10 @@ function Game() {
 
             {/* Fixed Bottom */}
             <div className="shrink-0 border-t border-neutral-700 p-4">
-              <button className="w-full rounded-xl bg-red-600 py-3 font-semibold hover:bg-red-700 transition">
+              <button
+                className="w-full rounded-xl bg-red-600 py-3 font-semibold hover:bg-red-700 transition"
+                onClick={handleLeave}
+              >
                 Leave Room
               </button>
               <button></button>
