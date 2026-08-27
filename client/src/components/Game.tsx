@@ -81,6 +81,12 @@ function Game() {
         const elapsedSeconds = (Date.now() - startTime) / 1000;
         const remaining = Math.max(0, totalSeconds - elapsedSeconds);
         setTimeLeft(remaining);
+        // if (remaining === 0) {
+        //   setGameFinished(true);
+        //   setShowPopup(true);
+        //   setPopupMessage("Time's up!");
+        //   handleLeave();
+        // }
       }
     });
 
@@ -141,6 +147,13 @@ function Game() {
   // Timer countdown
   useEffect(() => {
     if (!problem || gameFinished) return;
+    if (timeLeft === 0) {
+      setGameFinished(true);
+      console.log("Time's up!");
+      setShowPopup(true);
+      setPopupMessage("Time's up!");
+      handleLeave();
+    }
 
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
